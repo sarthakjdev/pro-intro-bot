@@ -1,0 +1,35 @@
+{
+  "name": "pro-intro",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsc && node -r ./prod-paths.ts ./dist/index.js",
+    "dev:db": "docker-compose -f ./database/docker-compose.yaml down && docker-compose -f ./database/docker-compose.yaml up -d ",
+    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --exit-child ./index.ts",
+    "dev:db-server": "npm run dev:db && ts-node-dev -r tsconfig-paths/register --respawn ./index.ts",
+    "db-migrate": "npx prisma migrate dev --name init --preview-feature",
+    "db-generate": "npx prisma generate",
+    "lint": "eslint ./",
+    "lint:fix": "eslint ./ --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^4.5.0",
+    "discord.js": "^14.6.0",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.27.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "prisma": "^4.5.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.8.4",
+    "winston": "^3.8.2"
+  }
+}
