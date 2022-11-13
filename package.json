@@ -7,9 +7,9 @@
     "build": "tsc",
     "start": "tsc && node -r ./prod-paths.ts ./dist/index.js",
     "dev:db": "docker-compose -f ./database/docker-compose.yaml down && docker-compose -f ./database/docker-compose.yaml up -d ",
-    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --exit-child ./index.ts",
+    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --exit-child --max_old_space_size=4096 ./index.ts",
     "dev:db-server": "npm run dev:db && ts-node-dev -r tsconfig-paths/register --respawn ./index.ts",
-    "db-migrate": "npx prisma migrate dev --name init --preview-feature",
+    "db-migrate": "npm run db-generate && npx prisma migrate dev --name init --preview-feature",
     "db-generate": "npx prisma generate",
     "lint": "eslint ./",
     "lint:fix": "eslint ./ --fix"

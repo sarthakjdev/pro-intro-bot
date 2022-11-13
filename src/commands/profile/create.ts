@@ -1,32 +1,30 @@
-import {Components} from '../../struct/Components'
-import {Bot} from '../../../bot'
+import { Components } from '../../struct/Components'
+import { Bot } from '../../../bot'
+import { ChatInputCommandInteraction, CommandInteraction } from 'discord.js'
+import { Guild } from '@prisma/client'
+import { Factory } from '../../models/factory/factory'
 
-export default async function createUserProfile(interaction, client: Bot  , guild, dbGuild) {
-    if (!dbGuild.profileCommandsChannel) {
-        const embed = Components.errorEmbed('This server has diabled the profile feature.')
+export default async function createUserProfile(interaction: ChatInputCommandInteraction, client: Bot, dbGuild: Guild) {
+    if (!dbGuild.profileCommandChannel) {
+        const errorEmbed = Components.errorEmbed('The bot  is not enabled for profile feature in this server, Please contact admin to get it enabled')
 
-        return interaction.editReply({ embeds: [embed] })
+        return interaction.editReply({ embeds: [errorEmbed] })
     }
-    const { id } = interaction.user
-    const name = interaction.options.get('name').value
-    const description = interaction.options.get('description').value
-    const title = interaction.options.get('titile').value
-    const twitter = interaction.options.get('twitter')?.value
-    const github = interaction.options.get('github')?.value
-    const linkedin = interaction.options.get('linkedin')?.value
-    const instagram = interaction.options.get('instagram')?.value
-    const email = interaction.options.get('skills')?.value
-    const resume = interaction.options.get('resume')?.value
-    const behance = interaction.options.get('behance')?.value
-    const personalPortfolio = interaction.options.get('personalPortfolio')?.value
-    const medium = interaction.options.get('medium')?.value
-    const skills = interaction.options.get('skills')?.value
-    const username = interaction.user.username
+    let dbUserProfile = await Factory.getUserProfile(interaction.user.id)
 
-    await client.factory.createUserProfile({id , name,  description, title, twitter, github, linkedin, instagram, skills, username, resume, email, behance, personalPortfolio, medium})
+    if(dbUserProfile) {
+        const errorEmbed = Components.errorEmbed('You are already registered')
 
-    const successEmbed = Components.successEmbed('Your profile has been created')
+        const channel = await interaction.channel?.fetch()
+        const profileEmbed = Components.profile(dbUserProfile)
+        await interaction.editReply({ embeds: [errorEmbed] })
+        return channel?.send(profileEmbed)
+    }
+    const inputs = interaction.options.data
 
-    return interaction.editReply(successEmbed)
+    // const dbUSerProfile = await Factory.createUserProfile({})
+
+    // const profileEmbed = Components.profile(dbUserProfile)
+    return interaction.editReply({})
 }
 

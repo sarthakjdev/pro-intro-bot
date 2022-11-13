@@ -26,19 +26,6 @@ export = [
                 type: 1,
             },
             {
-                name: 'set-channel',
-                description: 'setting or updating the profile feature channel',
-                type: 1,
-                options: [
-                    {
-                        name: 'channel',
-                        description: 'channel to update',
-                        type: 7,
-                        required: true,
-                    },
-                ],
-            },
-            {
                 name: 'create',
                 description: 'to create a users profile',
                 type: 1,
@@ -76,7 +63,41 @@ export = [
                         description: 'instagram of the user Ex: https://instagram.com/username',
                         type: 3,
                     },
-
+                    {
+                        name: 'title',
+                        description: 'a one liner title of yours ',
+                        type: 3,
+                    },
+                    {
+                        name: 'skills',
+                        description: 'skills of the user',
+                        type: 3,
+                    },
+                    {
+                        name: 'beahnce',
+                        description: 'behance profile link of the user',
+                        type: 3,
+                    },
+                    {
+                        name: 'medium',
+                        description: 'medium profile of the user',
+                        type: 3,
+                    },
+                    {
+                        name: 'devto',
+                        description: 'devto profile of the user',
+                        type: 3,
+                    },
+                    {
+                        name: 'resume',
+                        description: 'resume link of the user',
+                        type: 3,
+                    },
+                    {
+                        name: 'portfolio',
+                        description: 'personal portfolio link of the user',
+                        type: 3,
+                    },
                 ],
             },
             {
@@ -87,11 +108,13 @@ export = [
                     {
                         name: 'name',
                         description: 'name of the user',
+                        required: true,
                         type: 3,
                     },
                     {
                         name: 'description',
                         description: 'description of the user',
+                        required: true,
                         type: 3,
                     },
                     {
@@ -113,6 +136,41 @@ export = [
                     {
                         name: 'instagram',
                         description: 'instagram of the user Ex: https://instagram.com/username',
+                        type: 3,
+                    },
+                    {
+                        name: 'title',
+                        description: 'a one liner title of yours ',
+                        type: 3,
+                    },
+                    {
+                        name: 'skills',
+                        description: 'skills of the user',
+                        type: 3,
+                    },
+                    {
+                        name: 'beahnce',
+                        description: 'behance profile link of the user',
+                        type: 3,
+                    },
+                    {
+                        name: 'medium',
+                        description: 'medium profile of the user',
+                        type: 3,
+                    },
+                    {
+                        name: 'devto',
+                        description: 'devto profile of the user',
+                        type: 3,
+                    },
+                    {
+                        name: 'resume',
+                        description: 'resume link of the user',
+                        type: 3,
+                    },
+                    {
+                        name: 'portfolio',
+                        description: 'personal portfolio link of the user',
                         type: 3,
                     },
                 ],

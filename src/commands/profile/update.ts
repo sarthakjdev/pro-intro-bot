@@ -1,33 +1,28 @@
-import {Components} from '../../struct/Components'
+import { ChatInputCommandInteraction } from 'discord.js';
+import { Bot } from '../../../bot';
+import { Guild as IdbGuild } from '@prisma/client';
+import { Components } from '../../struct/Components'
+import { Factory } from '../../models/factory/factory';
 
-export default async function updateUserProfile(interaction, client, guild, dbGuild) {
-    if (!dbGuild.profileCommandsChannel) {
-        const embed = Components.errorEmbed('This server has diabled the profile feature.')
+export default async function updateUserProfile(interaction: ChatInputCommandInteraction, client: Bot, dbGuild: IdbGuild) {
+    if (!dbGuild.profileCommandChannel) {
+        const errorEmbed = Components.errorEmbed('The bot  is not enabled for profile feature in this server, Please contact admin to get it enabled')
 
-        return interaction.editReply({ embeds: [embed] })
+        return interaction.editReply({ embeds: [errorEmbed] })
     }
+    let dbUserProfile = await Factory.getUserProfile(interaction.user.id)
 
-    const dbUserProfile = await client.factory.getUserProfile(interaction.user.id)
     if (!dbUserProfile) {
-        const embed = Components.errorEmbed('You dont have any user profile created yet. Please do craete your profile first.')
+        const errorEmbed = Components.errorEmbed('You are not registered your profile')
 
-        return interaction.editReply({ embeds: [embed] })
+        return await interaction.editReply({ embeds: [errorEmbed] })
     }
 
-    const { id } = interaction.user
-    const name = interaction.options.get('name')?.value
-    const description = interaction.options.get('description')?.value
-    const twitter = interaction.options.get('twitter')?.value
-    const github = interaction.options.get('github')?.value
-    const linkedin = interaction.options.get('linkedin')?.value
-    const instagram = interaction.options.get('instagram')?.value
+    const inputs = interaction.options.data
 
-    await client.factory.updateUserProfile({
-        id, name, description, twitter, github, linkedin, instagram,
-    })
+    // const dbUSerProfile = await Factory.updateUserProfile()
 
-    const successEmbed = Components.successEmbed('Your profile has been updated')
-
-    return interaction.editReply(successEmbed)
+    // const profileEmbed = Components.profile(dbUserProfile)
+    // return interaction.editReply(profileEmbed)
 }
 

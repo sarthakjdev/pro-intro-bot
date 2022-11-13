@@ -6,7 +6,7 @@
 
  export default async (client) => {
      logger.info(`==== Bot ready :: ${client.user.username} =====`)
-     const setStatus = () => client.user.setActivity('discord.gg/rejoiceop', { type: 'WATCHING' })
+     const setStatus = () => client.user.setActivity('discord.gg/prointro', { type: 'WATCHING' })
      setStatus()
  }
  

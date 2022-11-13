@@ -1,5 +1,6 @@
 import { EmbedBuilder } from "@discordjs/builders";
-import { Colors, User } from "discord.js";
+import { UserProfile } from "@prisma/client";
+import { Colors, EmbedField, User } from "discord.js";
 import Util from '../utils/util'
 
 /**
@@ -12,11 +13,20 @@ export class Components {
     /**
      * construct the profile embed
      * @param {User} user 
-     * @returns 
+     * @memberof Components
      */
-    static profile(user: User) {
+    static profile(user: UserProfile) {
         const embed = new EmbedBuilder()
             .setColor(Colors.Green)
+            .setDescription(`profile of user <@${user.id}>`)
+            
+        let fields: EmbedField[] = [] as any
+        for(const prop in user){
+            const field:EmbedField = {name: prop , value: user[prop], inline: false} 
+            fields.push(field)
+        }
+
+        embed.addFields(fields)
 
         return {
             embeds: [embed],
@@ -26,14 +36,33 @@ export class Components {
     /**
      * construct the ping embed
      * @param {string} ping 
-     * @returns {EmbedBuilder}
+     * @meberof Components
      */
     static ping(ping: string) {
         const embed = new EmbedBuilder()
             .setColor(Colors.Green)
+            .setDescription(`Ping pong ping, ${ping}`)
 
         return {
             embeds: [embed],
+        }
+    }
+
+    /**
+     * bug embed
+     * @param {string} description
+     * @param {string} guildName
+     * @param {string} userName
+     * @memberof Components
+     */
+    static bugEmbed(description: string, guildName: string, userName: string ){
+        const embed = new EmbedBuilder()
+        .setColor(Colors.Red)
+        .setDescription(description)
+        .addFields([{name: 'Sent by: ', value: userName}, {name: 'Guild: ', value: guildName}])
+
+        return {
+            embeds: [embed]
         }
     }
 
@@ -41,7 +70,7 @@ export class Components {
     /**
      * to construct the success embed
      * @param {string} message 
-     * @returns 
+     * @memberof Components
      */
     static successEmbed(message) {
         const embed = new EmbedBuilder()
@@ -56,7 +85,7 @@ export class Components {
     /**
      * error embed
      * @param {string} message 
-     * @returns 
+     * @memberof Components
      */
     static errorEmbed(message) {
         return Util.embed().setDescription(`<:R_cross:915678807367757824> **${message}**`)

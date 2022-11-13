@@ -1,19 +1,25 @@
-import {Components} from '../../struct/Components'
+import { ChatInputCommandInteraction } from 'discord.js';
+import { Bot } from '../../../bot';
+import { Guild as IdbGuild } from '@prisma/client';
+import { Components } from '../../struct/Components'
+import { Factory } from '../../models/factory/factory';
+import { checkChannel } from '../../helpers/helper';
 
-export default async function getProfile(interaction, client, guild, dbGuild) {
-    if (!dbGuild.profileCommandsChannel) {
-        const embed = Components.errorEmbed('This server has diabled the profile feature.')
+export default async function getProfile(interaction: ChatInputCommandInteraction, client: Bot, dbGuild: IdbGuild) {
+    await checkChannel(interaction, dbGuild)
+    const userToFetch = interaction.options.get('user')?.value
+    const userId = userToFetch || interaction.user.id
 
-        return interaction.editReply({ embeds: [embed] })
+    const dbUSerProfile = await Factory.getUserProfile(userId as string)
+
+    if (!dbUSerProfile) {
+        const errorEmbed = Components.errorEmbed('User don\'n have profile with the bot, use /profile create to create a profile ')
+
+        return interaction.editReply({ embeds: [errorEmbed] })
     }
-    let userToFetch = ''
-    const user = await interaction.options.get('user')?.value
 
-    userToFetch = user || interaction.user.id
+    const profileEmbed = Components.profile(dbUSerProfile)
 
-    const userProfile = await client.factory.getUserProfile(userToFetch)
-    const discordUser = await guild.fetch(userToFetch)
-    const userProfileEmbed = Components.profile(userProfile)
+    return interaction.editReply(profileEmbed)
 
-    return interaction.editReply(userProfileEmbed)
 }

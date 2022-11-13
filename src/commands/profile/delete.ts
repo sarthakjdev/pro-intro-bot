@@ -1,18 +1,29 @@
 import { Components } from '../../struct/Components'
 import { Bot } from '../../../bot'
+import { ChatInputCommandInteraction } from 'discord.js'
+import { Guild as IdbGuild } from '@prisma/client'
+import { Factory } from '../../models/factory/factory'
+import { checkChannel } from '../../helpers/helper'
 
-export default async function deleteUserProfile(interaction, client: Bot, guild, dbGuild) {
-    if (!dbGuild.profileCommandsChannel) {
-        const embed = Components.errorEmbed('This server has diabled the profile feature.')
+export default async function deleteUserProfile(interaction: ChatInputCommandInteraction, client: Bot, dbGuild: IdbGuild) {
+    await checkChannel(interaction, dbGuild)
+    if (!dbGuild.profileCommandChannel) {
+        const errorEmbed = Components.errorEmbed('The bot  is not enabled for profile feature in this server, Please contact admin to get it enabled')
 
-        return interaction.editReply({ embeds: [embed] })
+        return interaction.editReply({ embeds: [errorEmbed] })
     }
-    const { id } = interaction.user
 
-    await client.factory.deleteUserProfile(id as string)
+    let dbUserProfile = await Factory.getUserProfile(interaction.user.id)
 
-    const successEmbed = Components.successEmbed('Your profile has been deleted succesfully')
+    if (!dbUserProfile) {
+        const errorEmbed = Components.errorEmbed('You are not registered your profile')
 
+        await interaction.editReply({ embeds: [errorEmbed] })
+    }
+
+     await Factory.deleteUserProfile(interaction.user.id)
+
+    const successEmbed = Components.successEmbed("The profile has beem deleted")
     return interaction.editReply(successEmbed)
 }
 

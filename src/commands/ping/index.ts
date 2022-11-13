@@ -2,11 +2,13 @@
  * ping command of the pro intro bot
  */
 
- import {Components} from '../../struct/Components'
+ import { CommandInteraction } from 'discord.js';
+import {Components} from '../../struct/Components'
 
- export default {
+ export const command =   {
      name: 'ping',
-     exec: async (interaction) => {
+     exec: async (interaction: CommandInteraction) => {
+ console.log("interaction ", interaction);
          const { client } = interaction
          console.log('client ', client)
          await interaction.deferReply()

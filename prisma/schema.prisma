@@ -14,7 +14,7 @@ model UserProfile {
   id                String  @id
   username          String? @unique
   name              String?
-  description       String? 
+  description       String?
   email             String?
   title             String?
   skills            String?
@@ -28,4 +28,11 @@ model UserProfile {
   medium            String?
 
   @@map("userprofile")
+}
+
+model Guild {
+  id                    String  @id
+  profileCommandChannel String?
+  ownerId               String?
+  @@map("guild")
 }

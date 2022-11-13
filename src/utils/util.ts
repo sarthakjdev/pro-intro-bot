@@ -5,7 +5,7 @@ export default class Util {
         return new EmbedBuilder().setColor('#ff2d38')
     }
 
-    static errorPrint(error, extra = {}) {
+    static errorPrint(error, extra = {}): void {
         let err = `${'=== Begin Error ===\n---\n'
         + 'Error: '}${error.message}\n`
         const extraArray = Object.keys(extra).map((e) => `${e} : ${extra[e]}`).join('\n')

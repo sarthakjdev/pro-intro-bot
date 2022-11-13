@@ -1,16 +1,26 @@
+import { ChatInputCommandInteraction, ComponentType } from 'discord.js';
+import { Bot } from '../../../bot';
+import { Guild as IdbGuild } from '@prisma/client';
 import {Components} from '../../struct/Components'
+import { Factory } from '../../models/factory/factory';
+import { PermissionsBitField } from 'discord.js';
+import { isAdmin } from '../../helpers/helper';
 
-export async function enableProfileFeature(interaction, client, guild, dbGuild) {
-    const channelToSet = await interaction.options.get('channel').value
-    const dbProfileCommandsChannel = dbGuild.ProfileCommandChannel // welcome channel for the guild as per the database
-    if (dbProfileCommandsChannel) { // if already a dbGuildChannel => service alredy enabled
-        const embed = Components.errorEmbed(`You have already enabled profile service on <#${dbProfileCommandsChannel}>`)
+export async function enableProfileFeature(interaction : ChatInputCommandInteraction, client:Bot , dbGuild: IdbGuild) {
 
-        return interaction.editReply({ embeds: [embed] })
+    await isAdmin(interaction)
+
+    if(dbGuild.profileCommandChannel) {
+        const successEmbed = Components.successEmbed("Your profile service is already enabled.")
+
+        return interaction.editReply(successEmbed)
     }
-    await client.factory.setProfileService(guild.id, channelToSet)
-    const setupSuccessEmbed = Components.successEmbed(`<@${interaction.user.id}>Congrats! profile service set up done!`)
+    const profileCommandChannel = interaction.options.get('channel')?.value
+    await Factory.updateProfileCommandChannel(interaction.guildId as string, profileCommandChannel as string)
 
-    return interaction.editReply(setupSuccessEmbed)
+    const successEmbed = Components.successEmbed('Your profile feature has been enable for your server')
+
+    return interaction.editReply(successEmbed)
+
 }
 

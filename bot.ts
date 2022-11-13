@@ -3,7 +3,7 @@ import { Client, Collection, User } from 'discord.js'
 import { readdirSync } from 'fs'
 import path from 'path'
 import commandsDefinition from 'commandsDefinition'
-import {UserFactory} from '@factory/userFatory'
+
 import Util from '@utils/util'
 import configs from '@configs/config'
 
@@ -11,12 +11,6 @@ import configs from '@configs/config'
  * main entry class for the discord bot
  */
 export class Bot extends Client {
-
-    /**
-     * factory for database queries
-     * @memberof Bot
-     */
-    factory: UserFactory
 
     commands: any
 
@@ -30,7 +24,6 @@ export class Bot extends Client {
         super(opts)
         this.commands = new Collection()
         this.slashCommands = new Collection()
-        this.factory = new UserFactory(this)
         this.util = Util
     }
 
@@ -52,7 +45,8 @@ export class Bot extends Client {
         for (const commandFolder of commands) {
             // eslint-disable-next-line @typescript-eslint/no-var-requires
             const command = require(`./src/commands/${commandFolder}/index`)
-            this.slashCommands.set(command.name, command)
+            console.log("command ", command);
+            this.slashCommands.set(command.command.name, command.command)
         }
     }
 

@@ -1,16 +1,23 @@
+import { Guild as IdbGuild } from '@prisma/client';
+import { ChatInputCommandInteraction } from 'discord.js';
+import { Bot } from '../../../bot';
 import {Components} from '../../struct/Components'
+import { Factory } from '../../models/factory/factory';
+import { isAdmin } from '../../helpers/helper';
 
-export async function disableProfileFeature(interaction, client, guild, dbGuild) {
-    const { dbProfileCommandsChannel } = dbGuild
-    if (!dbProfileCommandsChannel) { // if no welcome channel in db => service not enabled, hence no stoppage
-        const embed = Components.errorEmbed('You don\'t have profile service enabled for your server!')
+export async function disableProfileFeature(interaction:ChatInputCommandInteraction , clien: Bot , dbGuild: IdbGuild) {
 
-        return interaction.editReply({ embeds: [embed] })
+   await isAdmin(interaction)
+
+    if(!dbGuild.profileCommandChannel) {
+        const successEmbed = Components.successEmbed("Your profile service is already disabled.")
+
+        return interaction.editReply(successEmbed)
     }
-    await client.factory.setProfileService(guild.id, null)
+    await Factory.updateProfileCommandChannel(interaction.guildId as string, null)
 
-    const embed = Components.successEmbed('Successfully stopped the welcome service.')
+    const successEmbed = Components.successEmbed('Your profile feature has been diabled for your server')
 
-    return interaction.editReply(embed)
+    return interaction.editReply(successEmbed)
 }
 
