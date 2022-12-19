@@ -1,7 +1,7 @@
 import { Components } from '../../struct/Components'
 import { Bot } from '../../../bot'
-import { ChatInputCommandInteraction, CommandInteraction } from 'discord.js'
-import { Guild } from '@prisma/client'
+import { ChatInputCommandInteraction, CommandInteraction, User } from 'discord.js'
+import { Guild, UserProfile } from '@prisma/client'
 import { Factory } from '../../models/factory/factory'
 
 export default async function createUserProfile(interaction: ChatInputCommandInteraction, client: Bot, dbGuild: Guild) {
@@ -20,11 +20,20 @@ export default async function createUserProfile(interaction: ChatInputCommandInt
         await interaction.editReply({ embeds: [errorEmbed] })
         return channel?.send(profileEmbed)
     }
-    const inputs = interaction.options.data
+    const inputs = interaction.options.data[0].options
 
-    // const dbUSerProfile = await Factory.createUserProfile({})
+    let userData = {}
 
-    // const profileEmbed = Components.profile(dbUserProfile)
-    return interaction.editReply({})
+    await inputs?.map((opt)=> {
+        Object.defineProperty(userData, opt.name as any, {
+            value: opt.value,
+            writable: true
+        })
+    })
+
+    const newDbUserProfile = await Factory.createUserProfile({id: interaction.user.id, ...userData as any})
+
+    const profileEmbed = Components.profile(newDbUserProfile as UserProfile)
+    return interaction.editReply(profileEmbed)
 }
 

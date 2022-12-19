@@ -17,3 +17,5 @@ process.on('unhandledRejection', (error) => {
 })
 
 bot.build().then()
+
+// MTA0MDYzNzA3MzU0OTQ0MzEyMw.GL-ifv.V8VPoFKldajFL1sc-ZAgiGBHUq_sCJSGTt9Ifw

@@ -1,7 +1,8 @@
 import { EmbedBuilder } from "@discordjs/builders";
 import { UserProfile } from "@prisma/client";
-import { Colors, EmbedField, User } from "discord.js";
+import { APIEmbedField, Colors, EmbedField, User } from "discord.js";
 import Util from '../utils/util'
+import configs from '../configs/config'
 
 /**
  * class to construct the embeds
@@ -16,13 +17,16 @@ export class Components {
      * @memberof Components
      */
     static profile(user: UserProfile) {
+        console.log("user ", user);
         const embed = new EmbedBuilder()
             .setColor(Colors.Green)
             .setDescription(`profile of user <@${user.id}>`)
-            
-        let fields: EmbedField[] = [] as any
-        for(const prop in user){
-            const field:EmbedField = {name: prop , value: user[prop], inline: false} 
+            .setThumbnail(configs.THUMBNAIL)
+
+        let fields: APIEmbedField[] = [] as any
+        for (const prop in user) {
+            console.log("prop ", prop);
+            const field: APIEmbedField = { name: prop, value: user[prop], inline: false }
             fields.push(field)
         }
 
@@ -42,6 +46,8 @@ export class Components {
         const embed = new EmbedBuilder()
             .setColor(Colors.Green)
             .setDescription(`Ping pong ping, ${ping}`)
+            .setThumbnail(configs.THUMBNAIL)
+
 
         return {
             embeds: [embed],
@@ -55,11 +61,13 @@ export class Components {
      * @param {string} userName
      * @memberof Components
      */
-    static bugEmbed(description: string, guildName: string, userName: string ){
+    static bugEmbed(description: string, guildName: string, user: User) {
         const embed = new EmbedBuilder()
-        .setColor(Colors.Red)
-        .setDescription(description)
-        .addFields([{name: 'Sent by: ', value: userName}, {name: 'Guild: ', value: guildName}])
+            .setColor(Colors.Red)
+            .setDescription(`Bug : ${description}`)
+            .setTitle('A bug has been reported')
+            .setThumbnail(configs.THUMBNAIL)
+            .addFields([{ name: 'Sent by: ', value: `${user.tag}` }, { name: 'User Id', value: `${user.id}` }, { name: 'Guild: ', value: guildName }])
 
         return {
             embeds: [embed]
@@ -76,6 +84,8 @@ export class Components {
         const embed = new EmbedBuilder()
             .setColor(Colors.Green)
             .setDescription(`<:R_verify:915678098782052363> **${message}**`)
+            .setThumbnail(configs.THUMBNAIL)
+
 
         return {
             embeds: [embed],

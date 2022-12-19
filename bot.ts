@@ -3,7 +3,7 @@ import { Client, Collection, User } from 'discord.js'
 import { readdirSync } from 'fs'
 import path from 'path'
 import commandsDefinition from 'commandsDefinition'
-
+import logger from './src/utils/logger'
 import Util from '@utils/util'
 import configs from '@configs/config'
 
@@ -45,7 +45,7 @@ export class Bot extends Client {
         for (const commandFolder of commands) {
             // eslint-disable-next-line @typescript-eslint/no-var-requires
             const command = require(`./src/commands/${commandFolder}/index`)
-            console.log("command ", command);
+            logger.info(`${command.command.name} loaded`)
             this.slashCommands.set(command.command.name, command.command)
         }
     }

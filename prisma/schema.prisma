@@ -24,7 +24,7 @@ model UserProfile {
   linkedin          String?
   resume            String?
   behance           String?
-  personalPortfolio String?
+  portfolio String?
   medium            String?
 
   @@map("userprofile")
